@@ -5,7 +5,8 @@
 ```
 $ git clone --recursive https://github.com/mamiya312/docker-compose-for-crowi.git crowi
 $ cd crowi
-$ vi docker-compose.yml  # Edit PASSWORD_SEED
+$ cp .env.sample .env
+$ vi .env  # Edit PASSWORD_SEED
 $ docker-compose up -d
 ```
 
