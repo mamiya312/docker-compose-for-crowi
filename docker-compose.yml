@@ -1,0 +1,47 @@
+version: '2.0'
+services:
+  app:
+    build:
+      args:
+        http_proxy: ${http_proxy}
+        https_proxy: ${https_proxy}
+        no_proxy: ${no_proxy}
+      context: ./docker-crowi
+    environment:
+      MATHJAX: '1'
+      MONGO_URI: mongodb://db:27017/crowi
+      REDIS_URL: redis://redis:6379/crowi
+      PASSWORD_SEED: HOGEHOGE
+    ports:
+    - 3000:3000/tcp
+    restart: always
+    volumes:
+    - app-uploads-volume:/usr/src/app/public/uploads:rw
+    depends_on:
+    - db
+    - es
+  db:
+    image: mongo:latest
+    volumes:
+    - db-volume:/data/db:rw
+    restart: always
+  es:
+    command:
+    - /bin/bash
+    - bin/es-docker
+    entrypoint:
+    - bash
+    - -c
+    - elasticsearch-plugin list | grep -q analysis-kuromoji || elasticsearch-plugin
+      install analysis-kuromoji && exec $$0 $$@
+    environment:
+      # ES_JAVA_OPTS: -DproxyHost=${proxy_host} -DproxyPort=${proxy_port}
+      xpack.security.enabled: "false"
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.4
+    restart: always
+  redis:
+    image: redis:alpine
+    restart: always
+volumes:
+  app-uploads-volume: {}
+  db-volume: {}
