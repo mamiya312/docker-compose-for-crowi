@@ -1,3 +1,0 @@
-[submodule "docker-crowi"]
-	path = docker-crowi
-	url = https://github.com/crowi/docker-crowi.git
