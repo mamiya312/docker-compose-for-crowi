@@ -20,8 +20,7 @@ services:
     - db-volume:/data/db:rw
     restart: always
   es:
-    command:
-    - elasticsearch
+    image: elasticsearch:6.8.1
     entrypoint:
     - bash
     - -c
@@ -30,7 +29,8 @@ services:
     environment:
       ES_JAVA_OPTS: -DproxyHost=${PROXY_HOST} -DproxyPort=${PROXY_PORT}
       xpack.security.enabled: "false"
-    image: elasticsearch:2
+    command:
+    - /usr/local/bin/docker-entrypoint.sh
     restart: always
   redis:
     image: redis:alpine
