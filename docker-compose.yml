@@ -7,7 +7,7 @@ services:
       REDIS_URL: redis://redis:6379/crowi
       PASSWORD_SEED: ${PASSWORD_SEED}
     ports:
-    - ${LISTEN_PORT}:3000/tcp
+    - ${LISTEN_HOST}:${LISTEN_PORT}:3000/tcp
     restart: always
     volumes:
     - app-uploads-volume:/usr/src/app/public/uploads:rw
