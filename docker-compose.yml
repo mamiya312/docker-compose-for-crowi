@@ -15,7 +15,7 @@ services:
     - db
     - es
   db:
-    image: mongo:latest
+    image: mongo:3.6.13
     volumes:
     - db-volume:/data/db:rw
     restart: always
