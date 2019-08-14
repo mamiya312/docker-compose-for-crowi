@@ -7,34 +7,28 @@ services:
       REDIS_URL: redis://redis:6379/crowi
       PASSWORD_SEED: ${PASSWORD_SEED}
     ports:
-    - ${LISTEN_HOST}:${LISTEN_PORT}:3000/tcp
-    restart: always
+    - published: ${LISTEN_PORT}
+      target: 3000
+      protocol: tcp
+      mode: ingress
     volumes:
     - app-uploads-volume:/usr/src/app/public/uploads:rw
     depends_on:
     - db
-    - es
+    networks:
+    - network
   db:
     image: mongo:3.6.13
     volumes:
     - db-volume:/data/db:rw
-    restart: always
-  es:
-    image: elasticsearch:6.8.1
-    entrypoint:
-    - bash
-    - -c
-    - elasticsearch-plugin list | grep -q analysis-kuromoji || elasticsearch-plugin
-      install analysis-kuromoji && exec $$0 $$@
-    environment:
-      ES_JAVA_OPTS: -DproxyHost=${PROXY_HOST} -DproxyPort=${PROXY_PORT}
-      xpack.security.enabled: "false"
-    command:
-    - /usr/local/bin/docker-entrypoint.sh
-    restart: always
+    networks:
+    - network
   redis:
     image: redis:alpine
-    restart: always
+    networks:
+    - network
+networks:
+  network: {}
 volumes:
   app-uploads-volume: {}
   db-volume: {}
